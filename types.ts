@@ -14,4 +14,5 @@ export type Issue={
     created_at: string;
     closed_at: string;
     comments: number;
+    description: string;
 } 
