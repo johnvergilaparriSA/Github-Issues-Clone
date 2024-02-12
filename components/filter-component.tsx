@@ -1,9 +1,9 @@
-import {DownIcon, SearchIcon} from "./icons";
+import {DownIcon, LabelIcon, SearchIcon} from "./icons";
 
 export default function FilterComponent(){
     return <>
     <div className="flex flex-row w-full justify-around">
-        <form className="w-4/5">
+        <form className="w-full">
             <div className="flex">
                 <button id="dropdown-button" data-dropdown-toggle="dropdown" className="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-white bg-gray-800 border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-700" type="button"> 
                     Filters
@@ -29,8 +29,17 @@ export default function FilterComponent(){
                 </div>
             </div>
         </form>
-        <div className="w-1/4 mx-3">
-            <button type="button" className="focus:outline-none text-white bg-green-600 hover:bg-green-500 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">New Issue</button>
+        <div className="w-3/4 flex flex-row justify-end">
+            <button type="button" className="focus:outline-none text-white bg-slate-900 border border-gray-300 hover:bg-slate-800 font-medium rounded-lg text-sm px-2 py-1 flex flex-row flex items-center ml-2 mb-2">
+                <LabelIcon/>
+                <span className="mx-2 flex items-center">
+                    Labels 
+                </span>
+                <span className="text-xs bg-slate-500 rounded-lg px-2 py-1">
+                    (7)
+                </span>
+            </button>
+            <button type="button" className="focus:outline-none text-white bg-green-600 hover:bg-green-500 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 ml-2 mb-2">Change Repository</button>
         </div>    
     </div>
     </>
