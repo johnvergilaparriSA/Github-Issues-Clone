@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { IssueModule } from './issue/issue.module';
-import { LabelModule } from './label/label.module';
-import { LabelService } from './label/label.service';
+import { ConfigModule } from '@nestjs/config';
+
 
 @Module({
-  imports: [IssueModule, LabelModule],
+  imports: [IssueModule, ConfigModule.forRoot() ],
   controllers: [AppController],
-  providers: [AppService, LabelService],
+  providers: [AppService, ],
 })
 export class AppModule {}
