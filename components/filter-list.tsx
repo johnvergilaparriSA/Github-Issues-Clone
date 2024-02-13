@@ -50,38 +50,5 @@ export default function FilterList(props:{issues:Issue[]}){
         </tbody>
     </table>
   </div>
-  <div className="flex justify-center">
-    <nav className="m-2 flex self-center">
-      <ul className="flex items-center -space-x-px h-8 text-sm">
-        <li>
-          <a href="#" className="flex items-center justify-center px-3 h-8 ms-0 leading-tight hover:border hover:border-gray-700 text-gray-400 hover:text-white rounded-lg">
-            <BackIcon/>
-            <span className="ml-2">Previous</span>
-          </a>
-        </li>
-        <li>
-          <a href="#" className=" rounded-lg flex items-center justify-center px-3 h-8 leading-tight text-gray-400 hover:border hover:border-gray-300 hover:text-white">1</a>
-        </li>
-        <li>
-          <a href="#" className="rounded-lg flex items-center justify-center px-3 h-8 leading-tight text-gray-400 hover:border hover:border-gray-300 hover:text-white">2</a>
-        </li>
-        <li>
-          <a href="#" className="rounded-lg flex items-center justify-center px-3 h-8 leading-tight text-gray-400 hover:border hover:border-gray-300 hover:text-white">3</a>
-        </li>
-        <li>
-          <a href="#" className="rounded-lg flex items-center justify-center px-3 h-8 leading-tight text-gray-400 hover:border hover:border-gray-300 hover:text-white">4</a>
-        </li>
-        <li>
-          <a href="#" className="rounded-lg flex items-center justify-center px-3 h-8 leading-tight text-gray-400 hover:border hover:border-gray-300 hover:text-white">5</a>
-        </li>
-        <li>
-          <a href="#" className="flex items-center justify-center px-3 h-8 ms-0 leading-tight hover:border hover:border-gray-700 text-gray-400 hover:text-white rounded-lg">
-            <span className="mr-2">Next</span>
-            <NextIcon/>
-          </a>
-        </li>
-      </ul>
-    </nav>
-  </div>
 </>
 }

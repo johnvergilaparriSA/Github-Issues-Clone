@@ -1,11 +1,9 @@
-import { Inter } from "next/font/google";
 import FilterComponent from "@/components/filter-component";
-import { ClosedIcon, CommentIcon, DownIcon, LoadingSpinner, OpenIcon } from "@/components/icons";
-import { Issue } from "@/types";
 import FilterList from "@/components/filter-list";
+import { LoadingSpinner } from "@/components/icons";
 import ListPagination from "@/components/list-pagination";
+import { Issue } from "@/types";
 import { useState } from "react";
-
 
 export default function Home(props:{
   issues:Issue[], 
@@ -39,13 +37,14 @@ export default function Home(props:{
   );
 }
 
-export async function getServerSideProps(){
+export async function getServerSideProps(context:{params:{page:string}}){
+    const { params } = context;
+    const { page } = params;
 
   let api_data;
   try{
-    const api_res = await fetch("http://localhost:8000/issues");
+    const api_res = await fetch(`http://localhost:8000/issues?page=${page}`);
     api_data = await api_res.json()
-    console.log("Received", api_data);
   }catch(err){
     console.log(err)
   }
