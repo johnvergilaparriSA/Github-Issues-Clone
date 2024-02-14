@@ -1,8 +1,9 @@
 import { Issue } from "@/types";
 import IssueComponent from "./issue-component";
 import { BackIcon, ClosedIcon, DownIcon, NextIcon, OpenIcon } from "./icons";
+import Link from "next/link";
 
-export default function FilterList(props:{issues:Issue[], open: number, closed: number}){
+export default function FilterList(props:{issues:Issue[], open: number, closed: number, active:string}){
     return <>
   <div className="border border-gray-300 rounded-md overflow-hidden">
     <table className="w-full h-full text-sm text-left rtl:text-right text-gray-300 ">
@@ -10,18 +11,28 @@ export default function FilterList(props:{issues:Issue[], open: number, closed: 
           <tr>
             <td scope="col" className="px-6 py-3 flex justify-between w-full">
               <span className="flex flex-row"> 
-                <div className="flex flex-row items-center">
+
+                <Link href="/filter/open/1" className={"flex flex-row items-center " + (props.active === "open"? 
+                "text-white cursor-default font-bold"
+                :
+                "hover:text-white cursor-pointer")}>
                   <div className="ml-2 mr-1">
                     <OpenIcon/> 
                   </div>
                   {props.open} Open 
-                </div>
-                <div className="flex flex-row items-center">
+                </Link>
+                
+                <Link href="/filter/closed/1" className={"flex flex-row items-center " + (props.active === "closed"? 
+                "text-white cursor-default font-bold"
+                :
+                "hover:text-white cursor-pointer")}>
                   <div className="ml-2">
                     <ClosedIcon/> 
                   </div>
                   {props.closed} Closed
-                </div>
+                </Link>
+
+
               </span>
               <div className="flex flex-row">
                 Sort

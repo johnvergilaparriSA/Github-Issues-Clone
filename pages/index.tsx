@@ -22,8 +22,8 @@ export default function Home(props:{
       <FilterComponent/>
       {props.issues && props.filter ?
       <>
-      <FilterList issues={props.issues} open={props.filter.open_count} closed={props.filter.closed_count}/>
-      <ListPagination currentPage={1} lastPage={Math.ceil(props.filter.total_count/7)}/>
+      <FilterList active="none" issues={props.issues} open={props.filter.open_count} closed={props.filter.closed_count}/>
+      <ListPagination active="none" currentPage={1} lastPage={Math.ceil(props.filter.total_count/7)}/>
       </> 
       :
       <div className="flex justify-center h-screen items-center">

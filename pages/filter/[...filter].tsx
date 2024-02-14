@@ -4,14 +4,15 @@ import { LoadingSpinner } from "@/components/icons";
 import ListPagination from "@/components/list-pagination";
 import { Issue } from "@/types";
 
-export default function Home(props:{
+export default function FilteredHome(props:{
     issues:Issue[], 
     filter:{
       open_count: number,
       closed_count: number,
       total_count: number,
     },
-    page: number;
+    page: number,
+    filterActive: string,
   }) {
   
     return (
@@ -21,8 +22,8 @@ export default function Home(props:{
         <FilterComponent/>
         {props.issues && props.filter ?
         <>
-        <FilterList active="none" issues={props.issues} open={props.filter.open_count} closed={props.filter.closed_count}/>
-        <ListPagination active="none" currentPage={props.page} lastPage={Math.ceil(props.filter.total_count/7)}/>
+        <FilterList active={props.filterActive} issues={props.issues} open={props.filter.open_count} closed={props.filter.closed_count}/>
+        <ListPagination active={props.filterActive} currentPage={props.page} lastPage={Math.ceil(props.filter.total_count/7)}/>
         </> 
         :
         <div className="flex justify-center h-screen items-center">
@@ -34,13 +35,20 @@ export default function Home(props:{
     );
   }
 
-export async function getServerSideProps(context:{params:{page:string}}){
+export async function getServerSideProps(context:{params:{filter:string[]}}){
     const { params } = context;
-    const { page } = params;
+    const { filter } = params;
+
+    if(!filter){
+        return <p className="center">loading...</p>
+    }
+
+    const state = filter[0];
+    const page = filter[1];
 
   let api_data;
   try{
-    const api_res = await fetch(`http://localhost:8000/issues?page=${page}`);
+    const api_res = await fetch(`http://localhost:8000/issues?page=${page}&state=${state}`);
     api_data = await api_res.json()
   }catch(err){
     console.log(err)
@@ -56,6 +64,7 @@ export async function getServerSideProps(context:{params:{page:string}}){
           closed_count: api_data.closed_count,
         },
         page: parseInt(page),
+        filterActive: state,
       }, 
     }
   }
