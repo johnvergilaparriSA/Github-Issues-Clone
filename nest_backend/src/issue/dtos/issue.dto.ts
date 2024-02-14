@@ -14,3 +14,8 @@ export class IssueDTO{
     comments: number;
     description: string;
 }
+
+export class RequestQueryDTO{
+    state: string;
+    page: number;
+}

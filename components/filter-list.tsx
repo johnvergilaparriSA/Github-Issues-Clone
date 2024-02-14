@@ -35,8 +35,8 @@ export default function FilterList(props:{issues:Issue[], open: number, closed: 
         <tbody>
               {props.issues.length > 0?
               props.issues.map((obj, key)=>{
-                return <tr className="border-b bg-slate-900 border-gray-700 hover:bg-slate-800">
-                  <td scope="row" key={key} className="px-6 py-4 font-medium text-white whitespace-nowrap">
+                return <tr key={key} className="border-b bg-slate-900 border-gray-700 hover:bg-slate-800">
+                  <td scope="row"  className="px-6 py-4 font-medium text-white whitespace-nowrap">
                     <IssueComponent issue={obj}/>
                   </td>
                 </tr>
