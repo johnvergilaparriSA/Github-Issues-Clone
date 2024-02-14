@@ -96,15 +96,17 @@ export class IssueController {
     async getAllIssues(
       @Query() query:RequestQueryDTO
     ){
+      const octokit = new Octokit({
+        auth: this.configService.get<string>("API_TOKEN"),
+    })
         const {state, page} = query;
         let IssuesData:IssueDTO[] = [];
-        const api_res = await fetch(`https://api.github.com/repos/vuejs/vue/issues?state=${state || "all"}&page=${page || 1}&per_page=7`);
-        const data = await api_res.json();
-
+        const api_res = await octokit.request(`https://api.github.com/repos/vuejs/vue/issues?state=${state || "all"}&page=${page || 1}&per_page=7`);
+        const data = await api_res.data;
         data.map((res)=>{
-            let labelArr = getLabelArray(res.labels);
-            IssuesData.push({
-                id: res.id,
+          let labelArr = getLabelArray(res.labels);
+          IssuesData.push({
+            id: res.id,
                 issueNumber: res.number,
                 title: res.title,
                 state: res.state,
@@ -114,14 +116,22 @@ export class IssueController {
                 closed_at: res.closed_at,
                 comments: res.comments,
                 description: res.body,
-            })
+              })
         })
 
-        const openCount = IssuesData.reduce((count, issue) => issue.state === 'open' ? count+1 : count, 0)
-        const closedCount = IssuesData.reduce((count, issue) => issue.state === 'closed' ? count+1 : count, 0)
-
+        const api_open_res = await fetch("https://api.github.com/search/issues?q=repo:vuejs/vue+type:issue+state:open&page=0&per_page=1");
+        
+        const open_data = await api_open_res.json();
+        const openCount = open_data.total_count;
+        
+        const api_closed_res = await fetch("https://api.github.com/search/issues?q=repo:vuejs/vue+type:issue+state:closed&page=0&per_page=1");
+        
+        const closed_data = await api_closed_res.json();
+        const closedCount = closed_data.total_count;
+        
+        const total = openCount + closedCount;  
         const perPage = 10;        
-        const total = IssuesData.length;  
+        
         
         return{
           IssuesData,
@@ -139,8 +149,8 @@ export class IssueController {
         const octokit = new Octokit({
           auth: this.configService.get<string>("API_TOKEN"),
         })
-        const api_res =  await fetch(`https://api.github.com/repos/vuejs/vue/issues/${code}`)
-        const data = await api_res.json();
+        const api_res = await octokit.request(`https://api.github.com/repos/vuejs/vue/issues/${code}`)
+        const data = await api_res.data;
 
         let labelArr = getLabelArray(data.labels);
 

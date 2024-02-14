@@ -22,7 +22,7 @@ export default function IssueComponent(props: {issue:Issue}){
                 
             <div className="flex flex-col p-1">
             <div className="flex flex-row">
-                <Link href={/issues/ + id.toString()}>
+                <Link href={/issues/ + issueNumber.toString()}>
                     <span className="font-bold cursor:pointer hover:text-blue-500">
                         {title}
                     </span>
