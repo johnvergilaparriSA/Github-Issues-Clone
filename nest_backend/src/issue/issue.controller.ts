@@ -100,7 +100,7 @@ export class IssueController {
             auth: this.configService.get<string>("API_TOKEN"),
         })
         let IssuesData:IssueDTO[] = [];
-        const api_res = await getPaginatedData("/repos/vuejs/vue/issues?", octokit);
+        const api_res = await getPaginatedData("/repos/vuejs/vue/issues?state=all", octokit);
 
         api_res.map((res,key)=>{
             let labelArr = getLabelArray(res.labels);
@@ -118,22 +118,33 @@ export class IssueController {
             })
         })
 
-        const page: number = parseInt(request.query.page as string) || 1;
+        // for slicing --------------------------------------------------------
+        // const page: number = parseInt(request.query.page as string) || 1;
         const perPage = 10;
         
         const total = IssuesData.length;  
-        IssuesData = IssuesData.slice( (page - 1) * perPage, page * perPage);
-        
+        // IssuesData = IssuesData.slice( (page - 1) * perPage, page * perPage);
+        //----------------------------------------------------------------------
+
+
         const check = await octokit.request("GET /rate_limit",);
         console.log(check.data.rate);
         
+        // return object with slicing-------------------------------------------
+        // return {-
+        //     IssuesData,
+        //     page,
+        //     total,
+        //     last_page: Math.ceil(total/perPage), 
+        // };
+        //-----------------------------------------------------------------------
 
-        return {
-            IssuesData,
-            page,
-            total,
-            last_page: Math.ceil(total/perPage), 
-        };
+        // return object with no slicing
+        return{
+          IssuesData,
+          total,
+          last_page: Math.ceil(total/perPage), 
+        }
         
     }
         

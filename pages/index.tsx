@@ -10,24 +10,38 @@ import { useState } from "react";
 export default function Home(props:{
   issues:Issue[], 
   pagination:{
-    page:number, 
-    total:number, 
-    lastPage:number,
-  }}) {
+    total:number,
+    last_page: number, 
+  },
+  filter:{
+    open_count: number,
+    closed_count: number,
+  }
+}) {
 
-  const [issues,SetIssues] = useState(props.issues);
-  const [currentPage ,SetPage] = useState(props.pagination.page);
-  const [isLoading, setLoading] = useState(false);
+  const [currentPage ,setPage] = useState(1);
+  const pageSize = 10;
+
+  const onPageChange = (page:number) =>{
+    setPage(page);
+  }
+
+  const paginate = (data:Issue[], pageNumber:number, pageSize:number) => {
+    const startIndex = (pageNumber - 1) * pageSize;
+    return data.slice(startIndex, startIndex + pageSize);
+   };
+
+  const slicedIssueData = paginate(props.issues, currentPage, pageSize);
 
   return (
     <main className="bg-slate-900 p-10">
       <h1 className="text-3xl text-white">Repository</h1>
       <h1 className="text-md text-white mb-2">by <span className="font-bold">Owner Name</span></h1>
       <FilterComponent/>
-      {props.issues && props.pagination && !isLoading?
+      {slicedIssueData && props.pagination?
       <>
-      <FilterList issues={props.issues}/>
-      <ListPagination currentPage={currentPage} total={props.pagination.total} lastPage={props.pagination.lastPage}/>
+      <FilterList issues={slicedIssueData} open={props.filter.open_count} closed={props.filter.closed_count}/>
+      <ListPagination changePage={onPageChange} currentPage={currentPage} lastPage={props.pagination.last_page}/>
       </> 
       :
       <div className="flex justify-center">
@@ -39,7 +53,7 @@ export default function Home(props:{
   );
 }
 
-export async function getServerSideProps(){
+export async function getStaticProps(){
 
   let api_data;
   try{
@@ -55,9 +69,12 @@ export async function getServerSideProps(){
       props:{
         issues: api_data.IssuesData,
         pagination:{
-          page:api_data.page, 
           total:api_data.total, 
-          lastPage:api_data.last_page,
+          last_page: api_data.last_page,
+        },
+        filter:{
+          open_count: api_data.open_count,
+          closed_count: api_data.closed_count,
         }
       }, 
     }

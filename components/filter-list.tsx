@@ -2,7 +2,7 @@ import { Issue } from "@/types";
 import IssueComponent from "./issue-component";
 import { BackIcon, ClosedIcon, DownIcon, NextIcon, OpenIcon } from "./icons";
 
-export default function FilterList(props:{issues:Issue[]}){
+export default function FilterList(props:{issues:Issue[], open: number, closed: number}){
     return <>
   <div className="border border-gray-300 rounded-md overflow-hidden">
     <table className="w-full h-full text-sm text-left rtl:text-right text-gray-300 ">
@@ -14,13 +14,13 @@ export default function FilterList(props:{issues:Issue[]}){
                   <div className="ml-2 mr-1">
                     <OpenIcon/> 
                   </div>
-                  357 Open 
+                  {props.open} Open 
                 </div>
                 <div className="flex flex-row items-center">
                   <div className="ml-2">
                     <ClosedIcon/> 
                   </div>
-                  9656 Closed
+                  {props.closed} Closed
                 </div>
               </span>
               <div className="flex flex-row">
