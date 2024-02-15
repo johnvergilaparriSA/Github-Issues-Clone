@@ -70,12 +70,15 @@ export async function getServerSideProps(context:{query:{page:string,filter:stri
 
 
     let api_data;
-    try{
     const api_res = await fetch(`http://localhost:8000/issues?owner=${owner}&repo=${repo}&page=${page || "1"}&state=${filter || "all"}`);
-    api_data = await api_res.json()
-    }catch(err){
-    console.log(err)
+
+    if(api_res.status === 500){
+      return{
+        notFound:true
+      }
     }
+
+    api_data = await api_res.json()
 
     return{
       props:{

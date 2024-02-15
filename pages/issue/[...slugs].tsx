@@ -75,13 +75,6 @@ export async function getServerSideProps(context:{params:{slugs:string}}){
       console.log(err)
     }
     
-
-    if(!api_data.length){
-      return{
-        notFound:true
-      }
-    }
-    
     return{
       props:{
         issue:api_data
