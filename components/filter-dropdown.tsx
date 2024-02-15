@@ -1,14 +1,23 @@
 import { useState } from "react";
 import { DownIcon } from "./icons";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 
 
 export function FilterDropdown(){
     const [isOpen, setOpen] = useState(false);
-
+    const router = useRouter()
     function toggle(){
         setOpen(!isOpen);
+    }
+
+    function setFilter(state:string){
+        router.replace(
+          {query:{...router.query, page:1, filter:state}},
+          undefined,
+          {shallow: false}
+        )
     }
     const downClass = isOpen? "flex" : "hidden";
     return <>
@@ -21,10 +30,10 @@ export function FilterDropdown(){
                 <div id="dropdown" className={"z-10 bg-slate-900 border border-gray-300 absolute top-[9.5rem] z-30 w-[250px] min-h-[95px] flex flex-col rounded-lg shadow " + (downClass)}>
                     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-button">
                         <li>
-                            <Link href="/issues/filter/open/1" className="bg-slate-900 text-white block px-4 py-2 hover:bg-gray-500">Open</Link>
+                            <div onClick={()=>{setFilter('open'), toggle()}} className="bg-slate-900 text-white block px-4 py-2 hover:bg-gray-500">Open</div>
                         </li>
                         <li>
-                            <Link href="/issues/filter/closed/1" className="bg-slate-900 text-white block px-4 py-2 hover:bg-gray-500">Closed</Link>
+                            <div onClick={()=>{setFilter('closed'), toggle()}} className="bg-slate-900 text-white block px-4 py-2 hover:bg-gray-500">Closed</div>
                         </li>
                     </ul>
                 </div>

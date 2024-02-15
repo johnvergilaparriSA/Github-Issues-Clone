@@ -99,9 +99,9 @@ export class IssueController {
       const octokit = new Octokit({
         auth: this.configService.get<string>("API_TOKEN"),
     })
-        const {state, page} = query;
+        const {state, page, owner, repo} = query;
         let IssuesData:IssueDTO[] = [];
-        const api_res = await octokit.request(`https://api.github.com/repos/vuejs/vue/issues?state=${state || "all"}&page=${page || 1}&per_page=7`);
+        const api_res = await octokit.request(`https://api.github.com/repos/${owner || "vuejs"}/${repo || "vue"}/issues?state=${state || "all"}&page=${page || 1}&per_page=7`);
         const data = await api_res.data;
         data.map((res)=>{
           let labelArr = getLabelArray(res.labels);
@@ -119,7 +119,7 @@ export class IssueController {
               })
         })
         
-        let queryStr = "repo:vuejs/vue type:issue state:open"
+        let queryStr = `repo:${owner}/${repo} type:issue state:open`
         const api_open_res = await octokit.request("GET /search/issues",{
           q: queryStr,
         });
@@ -127,7 +127,7 @@ export class IssueController {
         const open_data = await api_open_res.data;
         const openCount = open_data.total_count;
         
-        queryStr = "repo:vuejs/vue type:issue state:closed"
+        queryStr = `repo:${owner}/${repo} type:issue state:closed`
         const api_closed_res = await octokit.request("GET /search/issues",{
           q:queryStr,
         });
@@ -136,7 +136,14 @@ export class IssueController {
         const closed_data = await api_closed_res.data;
         const closedCount = closed_data.total_count;
         
-        const total = openCount + closedCount;
+        let total;
+        if(state === "open"){
+          total = openCount;
+        }else if(state === "closed"){
+          total = closedCount;
+        }else{
+          total = openCount + closedCount;
+        }
         const perPage = 10;        
         
         const check = await octokit.request("GET /rate_limit",);
@@ -153,12 +160,14 @@ export class IssueController {
 
     @Get('/issues/:code')
     async getIssue(
-      @Param('code') code: number
+      @Param('code') code: number,
+      @Query() query:RequestQueryDTO,
       ):Promise<IssueDTO>{
         const octokit = new Octokit({
           auth: this.configService.get<string>("API_TOKEN"),
         })
-        const api_res = await octokit.request(`https://api.github.com/repos/vuejs/vue/issues/${code}`)
+        const { repo, owner } = query;
+        const api_res = await octokit.request(`https://api.github.com/repos/${owner || "vuejs"}/${repo || "vue"}/issues/${code}`)
         const data = await api_res.data;
 
         let labelArr = getLabelArray(data.labels);

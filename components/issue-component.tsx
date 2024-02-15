@@ -3,7 +3,7 @@ import { ClosedIcon, CommentIcon, OpenIcon } from "./icons";
 import Link from "next/link";
 
 
-export default function IssueComponent(props: {issue:Issue}){
+export default function IssueComponent(props: {issue:Issue, owner: string, repo: string, page:number}){
     const {id, title, author, created_at, closed_at, issueNumber, comments, state, labels} = props.issue;
     const readableOpenDate = new Date(created_at).toDateString();
     const readableCloseDate = new Date(closed_at).toDateString();
@@ -22,7 +22,7 @@ export default function IssueComponent(props: {issue:Issue}){
                 
             <div className="flex flex-col p-1">
             <div className="flex flex-row">
-                <Link href={/issue/ + issueNumber.toString()}>
+                <Link href={`/issue/${props.owner}/${props.repo}/${issueNumber.toString()}`}>
                     <span className="font-bold cursor:pointer hover:text-blue-500">
                         {title}
                     </span>

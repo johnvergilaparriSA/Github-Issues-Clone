@@ -1,6 +1,16 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { FormEvent, useRef } from "react";
 
 export default function Home(){
+    const repoInputRef = useRef<HTMLInputElement>(null);
+    const ownInputRef = useRef<HTMLInputElement>(null);
+    const router = useRouter();
+
+    function onViewIssues(event:FormEvent<HTMLFormElement>){
+        router.push(`/list/${ownInputRef.current!.value}/${repoInputRef.current!.value}`)    
+    }
+
     return <main className="bg-slate-900 flex flex-col justify-center items-center px-20 py-10 h-screen">
         <div className="flex justify-center flex-col">
             <div className="flex justify-center">
@@ -19,9 +29,9 @@ export default function Home(){
                 </span>
                 to view the issues.
             </h1>
-            <form className="flex flex-col text-white p-5">
-                <input placeholder="Repository" className="rounded-lg bg-slate-800 border border-gray-300 p-1 mb-1" name="repository" required/>
-                <input placeholder="Owner" className="rounded-lg bg-slate-800 border border-gray-300 p-1 mb-1" name="owner" required/>
+            <form onSubmit={onViewIssues} className="flex flex-col text-white p-5">
+                <input placeholder="Repository" className="rounded-lg bg-slate-800 border border-gray-300 p-1 mb-1" name="repository" ref={repoInputRef} required/>
+                <input placeholder="Owner" className="rounded-lg bg-slate-800 border border-gray-300 p-1 mb-1" name="owner" ref={ownInputRef} required/>
                 <div className="w-full flex justify-end">
                     <button type="submit" className="px-2 py-1 bg-green-500 rounded-lg w-1/4 hover:bg-green-600">View Issues</button>
                 </div>

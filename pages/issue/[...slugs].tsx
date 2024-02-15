@@ -5,14 +5,31 @@ import { getData } from "@/dummydata";
 import { Issue } from "@/types";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { remark } from "remark";
 import html from 'remark-html';
 
 export default function IssuePage(props:{issue:Issue}){
   const router = useRouter()
-  
+  const [loading, setLoading] = useState(false);
+    
+    useEffect(()=>{
+        const handleStart = (url:string) => (url !== router.asPath) && setLoading(true);
+        const handleEnd = () =>  setLoading(false);
+
+        router.events.on('routeChangeStart', handleStart);
+        router.events.on('routeChangeComplete', handleEnd);
+        router.events.on('routeChangeError', handleEnd);
+        
+        return()=>{
+            router.events.off('routeChangeStart', handleStart);
+            router.events.off('routeChangeComplete', handleEnd);
+            router.events.off('routeChangeError', handleEnd);
+        }
+    })
+
   return <main className="bg-slate-900 p-10 h-screen px-20">
-        {props.issue? <>
+        {!loading? <>
         <button  onClick={()=>{router.back()}} className="py-1 flex flex-row justify-center text-white hover:text-blue-500 items-center border border-slate-900 hover:border-gray-300 w-20 rounded-lg ">
           <div className="pr-1 py-1">
             <BackIcon/>
@@ -34,14 +51,19 @@ export default function IssuePage(props:{issue:Issue}){
     </main>
 }
 
-export async function getServerSideProps(context:{params:{issueId:string}}){
+export async function getServerSideProps(context:{params:{slugs:string}}){
     const { params } = context;
-    const { issueId } = params;
+    const { slugs } = params;
     
+
+    const owner = slugs[0];
+    const repo = slugs[1];
+    const number = slugs[2];
+
     let api_data;
     let content;
     try{
-      const api_res = await fetch(`http://localhost:8000/issues/${issueId}`);
+      const api_res = await fetch(`http://localhost:8000/issues/${number}?owner=${owner}&repo=${repo}`);
       api_data = await api_res.json()
       // Use remark to convert markdown into HTML string
       const processedContent = await remark()
@@ -54,21 +76,15 @@ export async function getServerSideProps(context:{params:{issueId:string}}){
     }
     
 
-
+    if(!api_data.length){
+      return{
+        notFound:true
+      }
+    }
+    
     return{
       props:{
-        issue:{
-          id: api_data.id,
-          issueNumber: api_data.issueNumber,
-          title: api_data.title,
-          state: api_data.state,
-          labels: api_data.labels,
-          author: api_data.author,
-          created_at: api_data.created_at,
-          closed_at: api_data.closed_at,
-          comments: api_data.comments,
-          description: content,
-        }
+        issue:api_data
       },
     }
-}
+  }

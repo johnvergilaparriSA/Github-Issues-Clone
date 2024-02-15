@@ -18,4 +18,6 @@ export class IssueDTO{
 export class RequestQueryDTO{
     state: string;
     page: number;
+    owner: string;
+    repo: string;
 }

@@ -2,9 +2,26 @@ import { Issue } from "@/types";
 import IssueComponent from "./issue-component";
 import { BackIcon, ClosedIcon, DownIcon, NextIcon, OpenIcon } from "./icons";
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/router";
 
-export default function FilterList(props:{issues:Issue[], open: number, closed: number, active:string}){
-    return <>
+export default function FilterList(props:{issues:Issue[], open: number, closed: number, active:string, owner:string, repo:string, page:number}){
+  
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+
+  function setFilter(state:string){
+    router.replace(
+      {query:{...router.query, page:1, filter:state}},
+      undefined,
+      {shallow: false}
+    )
+  }
+  
+  
+  
+  return <>
   <div className="border border-gray-300 rounded-md overflow-hidden">
     <table className="w-full h-full text-sm text-left rtl:text-right text-gray-300 ">
       <thead className="text-xs text-gray-300 bg-slate-800">
@@ -12,7 +29,7 @@ export default function FilterList(props:{issues:Issue[], open: number, closed: 
             <td scope="col" className="px-6 py-3 flex justify-between w-full">
               <span className="flex flex-row"> 
 
-                <Link href="/issues/filter/open/1" className={"flex flex-row items-center " + (props.active === "open"? 
+                <div onClick={()=>{setFilter("open")}} className={"flex flex-row items-center " + (props.active === "open"? 
                 "text-white cursor-default font-bold"
                 :
                 "hover:text-white cursor-pointer")}>
@@ -20,9 +37,9 @@ export default function FilterList(props:{issues:Issue[], open: number, closed: 
                     <OpenIcon/> 
                   </div>
                   {props.open} Open 
-                </Link>
+                </div>
                 
-                <Link href="/issues/filter/closed/1" className={"flex flex-row items-center " + (props.active === "closed"? 
+                <div onClick={()=>{setFilter("closed")}} className={"flex flex-row items-center " + (props.active === "closed"? 
                 "text-white cursor-default font-bold"
                 :
                 "hover:text-white cursor-pointer")}>
@@ -30,7 +47,7 @@ export default function FilterList(props:{issues:Issue[], open: number, closed: 
                     <ClosedIcon/> 
                   </div>
                   {props.closed} Closed
-                </Link>
+                </div>
 
 
               </span>
@@ -48,7 +65,7 @@ export default function FilterList(props:{issues:Issue[], open: number, closed: 
               props.issues.map((obj, key)=>{
                 return <tr key={key} className="border-b bg-slate-900 border-gray-700 hover:bg-slate-800">
                   <td scope="row"  className="px-6 py-4 font-medium text-white whitespace-nowrap">
-                    <IssueComponent issue={obj}/>
+                    <IssueComponent page={props.page} owner={props.owner} repo={props.repo} issue={obj}/>
                   </td>
                 </tr>
               }):
