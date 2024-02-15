@@ -4,7 +4,7 @@ import { LoadingSpinner } from "@/components/icons";
 import ListPagination from "@/components/list-pagination";
 import { Issue } from "@/types";
 
-export default function Home(props:{
+export default function ListNumPage(props:{
     issues:Issue[], 
     filter:{
       open_count: number,

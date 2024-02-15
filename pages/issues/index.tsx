@@ -6,7 +6,7 @@ import FilterList from "@/components/filter-list";
 import ListPagination from "@/components/list-pagination";
 import { useEffect, useState } from "react";
 
-export default function Home(props:{
+export default function ListPage(props:{
   issues:Issue[], 
   filter:{
     open_count: number,
@@ -39,18 +39,10 @@ export default function Home(props:{
 export async function getStaticProps(){
 
   let api_data;
-  let api_count_data
   
   try{
     const api_res = await fetch("http://localhost:8000/issues");
     api_data = await api_res.json()
-    console.log("Received", api_data);
-  }catch(err){
-    console.log(err)
-  }
-  try{
-    const api_res_count = await fetch("http://localhost:8000/count");
-    api_count_data = await api_res_count.json()
     console.log("Received", api_data);
   }catch(err){
     console.log(err)
