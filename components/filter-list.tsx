@@ -12,7 +12,7 @@ export default function FilterList(props:{issues:Issue[], open: number, closed: 
             <td scope="col" className="px-6 py-3 flex justify-between w-full">
               <span className="flex flex-row"> 
 
-                <Link href="/filter/open/1" className={"flex flex-row items-center " + (props.active === "open"? 
+                <Link href="/issues/filter/open/1" className={"flex flex-row items-center " + (props.active === "open"? 
                 "text-white cursor-default font-bold"
                 :
                 "hover:text-white cursor-pointer")}>
@@ -22,7 +22,7 @@ export default function FilterList(props:{issues:Issue[], open: number, closed: 
                   {props.open} Open 
                 </Link>
                 
-                <Link href="/filter/closed/1" className={"flex flex-row items-center " + (props.active === "closed"? 
+                <Link href="/issues/filter/closed/1" className={"flex flex-row items-center " + (props.active === "closed"? 
                 "text-white cursor-default font-bold"
                 :
                 "hover:text-white cursor-pointer")}>

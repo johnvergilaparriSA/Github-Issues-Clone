@@ -19,7 +19,7 @@ export default function Home(props:{
         <h1 className="text-3xl text-white">Repository</h1>
         <h1 className="text-md text-white mb-2">by <span className="font-bold">Owner Name</span></h1>
         <FilterComponent/>
-        {props.issues && props.filter ?
+        {props.issues?
         <>
         <FilterList active="none" issues={props.issues} open={props.filter.open_count} closed={props.filter.closed_count}/>
         <ListPagination active="none" currentPage={props.page} lastPage={Math.ceil(props.filter.total_count/7)}/>
@@ -38,18 +38,13 @@ export async function getServerSideProps(context:{params:{page:string}}){
     const { params } = context;
     const { page } = params;
 
-  let api_data;
-  try{
+  
     const api_res = await fetch(`http://localhost:8000/issues?page=${page}`);
-    api_data = await api_res.json()
-  }catch(err){
-    console.log(err)
-  }
+    const api_data = await api_res.json();
 
-  if(api_data){
     return{
       props:{
-        issues: api_data.IssuesData,
+        issues: api_data.IssuesData!,
         filter:{
           total_count: api_data.total,
           open_count: api_data.open_count,
@@ -58,5 +53,6 @@ export async function getServerSideProps(context:{params:{page:string}}){
         page: parseInt(page),
       }, 
     }
-  }
+  
+  
 } 

@@ -10,15 +10,15 @@ export default function ListPagination(props:{
   function getLink(filter:string, page: number, isIncrement:boolean){
     if(filter === "none"){
       if(isIncrement){
-        return (page + 1);
+        return '/issues/' + (page + 1);
       }else{
-        return (page - 1);
+        return '/issues/' + (page - 1);
       }
     }else{
       if(isIncrement){
-        return "/filter/" + filter + "/" + (page + 1); 
+        return "/issues/filter/" + filter + "/" + (page + 1); 
       }else{
-        return "/filter/" + filter + "/" + (page - 1);
+        return "/issues/filter/" + filter + "/" + (page - 1);
       }
     }
   }

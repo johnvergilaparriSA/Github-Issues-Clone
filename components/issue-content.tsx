@@ -7,8 +7,10 @@ export default function IssueContent(props:{
     return <div className="flex flex-row text-white p-2 w-full">
     <div className="flex flex-col w-3/4">
         <h1 className="text-4xl">Information</h1>
-        <div className="border border-gray-300 h-auto w-full p-5 m-1 rounded-lg" 
-        dangerouslySetInnerHTML={{ __html: props.description }} />
+        <div className="text-wrap border border-gray-300 h-auto w-full p-5 m-1 rounded-lg overflow-hidden">
+            <div className="text-pretty break-words inline-block" style={{wordWrap: "break-word" }} dangerouslySetInnerHTML={{ __html: props.description }} />
+            
+        </div>
     </div>
     <div className="w-1/4 p-10" >
         <span className="font-bold">Label</span>

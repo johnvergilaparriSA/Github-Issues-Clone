@@ -118,27 +118,36 @@ export class IssueController {
                 description: res.body,
               })
         })
-
-        const api_open_res = await fetch("https://api.github.com/search/issues?q=repo:vuejs/vue+type:issue+state:open&page=0&per_page=1");
         
-        const open_data = await api_open_res.json();
+        let queryStr = "repo:vuejs/vue type:issue state:open"
+        const api_open_res = await octokit.request("GET /search/issues",{
+          q: queryStr,
+        });
+        
+        const open_data = await api_open_res.data;
         const openCount = open_data.total_count;
         
-        const api_closed_res = await fetch("https://api.github.com/search/issues?q=repo:vuejs/vue+type:issue+state:closed&page=0&per_page=1");
+        queryStr = "repo:vuejs/vue type:issue state:closed"
+        const api_closed_res = await octokit.request("GET /search/issues",{
+          q:queryStr,
+        });
         
-        const closed_data = await api_closed_res.json();
+        
+        const closed_data = await api_closed_res.data;
         const closedCount = closed_data.total_count;
         
-        const total = openCount + closedCount;  
+        const total = openCount + closedCount;
         const perPage = 10;        
         
+        const check = await octokit.request("GET /rate_limit",);
+        console.log(check.data.rate);
         
         return{
           IssuesData,
-          total,
+          total: total? total : null,
           last_page: Math.ceil(total/perPage),
-          open_count: openCount,
-          closed_count: closedCount 
+          open_count: openCount? openCount: null,
+          closed_count: closedCount? closedCount: null 
         }
     }
 

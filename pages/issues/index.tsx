@@ -20,7 +20,8 @@ export default function Home(props:{
       <h1 className="text-3xl text-white">Repository</h1>
       <h1 className="text-md text-white mb-2">by <span className="font-bold">Owner Name</span></h1>
       <FilterComponent/>
-      {props.issues && props.filter ?
+      {props.issues && 
+      props.filter?
       <>
       <FilterList active="none" issues={props.issues} open={props.filter.open_count} closed={props.filter.closed_count}/>
       <ListPagination active="none" currentPage={1} lastPage={Math.ceil(props.filter.total_count/7)}/>
@@ -38,6 +39,8 @@ export default function Home(props:{
 export async function getStaticProps(){
 
   let api_data;
+  let api_count_data
+  
   try{
     const api_res = await fetch("http://localhost:8000/issues");
     api_data = await api_res.json()
@@ -45,8 +48,13 @@ export async function getStaticProps(){
   }catch(err){
     console.log(err)
   }
-  
-  if(api_data){
+  try{
+    const api_res_count = await fetch("http://localhost:8000/count");
+    api_count_data = await api_res_count.json()
+    console.log("Received", api_data);
+  }catch(err){
+    console.log(err)
+  }
     return{
       props:{
         issues: api_data.IssuesData,
@@ -57,5 +65,4 @@ export async function getStaticProps(){
         }
       }, 
     }
-  }
 }
